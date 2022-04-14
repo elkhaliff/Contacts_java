@@ -2,7 +2,7 @@ package contacts;
 
 import java.util.regex.Pattern;
 
-public class Person {
+public class Person extends Contact{
     String name, surname, phone;
 
     public Person(String name, String surname, String phone) {
@@ -32,4 +32,14 @@ public class Person {
     public String getSurname() { return surname; }
 
     public String getPhone() { return phone; }
+
+    @Override
+    void getData() {
+
+    }
+
+    @Override
+    void setData() {
+
+    }
 }

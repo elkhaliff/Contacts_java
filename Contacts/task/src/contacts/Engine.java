@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Engine {
-    final String menu = "Enter action (add, remove, edit, count, list, exit): ";
+    final String menu = "Enter action (add, remove, edit, count, info, exit): ";
     private final PhoneBook phoneBook;
-    String action;
+    Action action;
     int cnt;
 
     public Engine() {
@@ -20,15 +20,25 @@ public class Engine {
     }
 
     public void run() {
-        while (true) {
-            action = getString(menu);
-            if ("add".equals(action))  addContact();
-            else if ("remove".equals(action))  removeContact();
-            else if ("edit".equals(action))  editContact();
-            else if ("count".equals(action))
+        boolean ret = true;
+        while (ret) {
+            var inp = getString(menu).toUpperCase();
+            action = Action.valueOf(inp);
+            switch (action) {
+                case ADD -> addContact();
+                case REMOVE -> removeContact();
+                case EDIT -> editContact();
+                case COUNT -> System.out.printf("The Phone Book has %d records.%n", phoneBook.countPeople());
+                case INFO -> showList();
+                case EXIT -> ret = false;
+            }
+            /*if (Action.ADD.getAction().equals(action))  addContact();
+            else if (Action.REMOVE.getAction().equals(action))  removeContact();
+            else if (Action.EDIT.getAction().equals(action))  editContact();
+            else if (Action.COUNT.getAction().equals(action))
                 System.out.printf("The Phone Book has %d records.%n", phoneBook.countPeople());
-            else if ("list".equals(action))  showList();
-            else if ("exit".equals(action))  return;
+            else if (Action.INFO.getAction().equals(action))  showList();
+            else if (Action.EXIT.getAction().equals(action))  return;*/
         }
     }
 
@@ -44,22 +54,27 @@ public class Engine {
 
     private void editContact() {
         if (phoneBook.countPeople() > 0) {
-            action = getString("Select a record: ");
-            int personId = Integer.parseInt(action);
+            int personId = Integer.parseInt(getString("Select a record: "));
             Person person = phoneBook.getPersonById(personId);
-            action = getString("Select a field (name, surname, number): ");
-            if ("name".equals(action)) person.setName(getString("Enter name: "));
+            var inp = getString("Select a field (name, surname, number): ").toUpperCase();
+            action = Action.valueOf(inp);
+            switch (action) {
+                case NAME -> person.setName(getString("Enter name: "));
+                case SURNAME -> person.setSurname(getString("Enter surname: "));
+                case NUMBER -> person.setPhone(getString("Enter surname: "));
+            }
+            phoneBook.editPersonById(personId, person);
+            /*if ("name".equals(action)) person.setName(getString("Enter name: "));
             else if ("surname".equals(action)) person.setSurname(getString("Enter surname: "));
             else if ("number".equals(action)) person.setPhone(getString("Enter surname: "));
-            phoneBook.editPersonById(personId, person);
+            phoneBook.editPersonById(personId, person);*/
         } else
             System.out.println("No records to edit!");
     }
 
     private void removeContact() {
         if (phoneBook.countPeople() > 0) {
-            action = getString("Select a record: ");
-            int personId = Integer.parseInt(action);
+            int personId = Integer.parseInt(getString("Select a record: "));
             phoneBook.removePerson(personId);
         } else
             System.out.println("No records to remove!");
