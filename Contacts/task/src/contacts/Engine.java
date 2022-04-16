@@ -2,6 +2,7 @@ package contacts;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Engine {
@@ -37,12 +38,14 @@ public class Engine {
     }
 
     public void run() {
-        try {
+        /*try {
             phoneBook = (PhoneBook) SerializationUtils.deserialize(SERIAL_FILE_NAME);
             System.out.println("open " + SERIAL_FILE_NAME + "\n");
         } catch (IOException | ClassNotFoundException e) {
             System.out.print("");
-        }
+        } */
+        System.out.println("open " + SERIAL_FILE_NAME + "\n");
+
         boolean ret = true;
         while (ret) {
             switch (getAction(menu)) {
@@ -51,11 +54,11 @@ public class Engine {
                 case SEARCH -> searchContact();
                 case COUNT -> System.out.printf("The Phone Book has %d records.%n", phoneBook.countPeople());
                 case EXIT -> {
-                    try {
+                  /*  try {
                         SerializationUtils.serialize(phoneBook, SERIAL_FILE_NAME);
                     } catch (IOException e) {
                         e.printStackTrace();
-                    }
+                    }*/
                     ret = false;
                 }
             }
@@ -90,22 +93,25 @@ public class Engine {
     }
 
     private void list() {
-        showList();
-        String strAction = getString("[list] Enter action ([number], back): ");
-        int recordId = getInt(strAction);
-        if (recordId > 0) showRecord(recordId);
+        if (showList() > 0) {
+            String strAction = getString("[list] Enter action ([number], back): ");
+            int recordId = getInt(strAction);
+            if (recordId > 0) showRecord(recordId);
+        }
     }
 
-    private void showList() {
-        if (phoneBook.countPeople() > 0) {
+    private int showList() {
+        int count = phoneBook.countPeople();
+        if (count > 0) {
             List<Contact> people =  phoneBook.getPeople();
             String format = "%d. %s";
             cnt = 1;
-            people.forEach(p -> System.out.printf((format) + "%n", cnt++, p.getName()));
+            people.forEach(p -> System.out.printf((format) + "%n", cnt++, p.getFullName()));
         } else
             System.out.println("No records to list!");
 
         System.out.println();
+        return count;
     }
 
     private void searchContact() {
@@ -135,12 +141,13 @@ public class Engine {
             List<Contact> people =  phoneBook.getPeople();
             cnt = 1;
             for (Contact contact : people) {
-                if (contact.getName().contains(searchStr))
+                if (contact.getFullName().toLowerCase().contains(searchStr.toLowerCase()) ||
+                        contact.getPhone().contains(searchStr))
                     searchBook.addContact(contact);
             }
             if (searchBook.countPeople() > 0) {
                 String format = "%d. %s";
-                searchBook.getPeople().forEach(p -> System.out.printf((format) + "%n", cnt++, p.getName()));
+                searchBook.getPeople().forEach(p -> System.out.printf((format) + "%n", cnt++, p.getFullName()));
             } else
                 System.out.println("No records to list!");
         }
@@ -153,7 +160,7 @@ public class Engine {
             System.out.println(phoneBook.getContactById(recordId));
             switch (getAction("[record] Enter action (edit, delete, menu): ")) {
                 case EDIT -> editContact(recordId);
-                case DELETE -> deleteContact(recordId);
+                case DELETE -> { deleteContact(recordId); ret = false; }
                 case MENU -> ret = false;
             }
         }

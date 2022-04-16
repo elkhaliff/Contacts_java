@@ -38,4 +38,9 @@ public class Organization extends Contact implements Serializable {
                 "Time created: " + timeCreated + "\n" +
                 "Time last edit: " + lastEdit + "\n";
     }
+
+    @Override
+    public String getFullName() { return getName(); }
+
+    private String getName() { return name; }
 }

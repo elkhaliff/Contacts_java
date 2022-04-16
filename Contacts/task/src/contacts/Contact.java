@@ -11,12 +11,14 @@ public abstract class Contact implements Serializable {
     LocalDateTime lastEdit;
     boolean isPerson;
 
-    public String getName() { return name; }
+    public abstract String getFullName();
+
+    public String getPhone() { return phone != null ? phone : ""; }
     
     protected String testPhone(String phone) {
         String test = phone;
         Pattern patternMin =  Pattern.compile("^([+]?[0-9]?[ \\-]?)?((\\(?[\\w]{2,}\\)?[ \\-]?)?([\\w]{2,})?|([\\w]{2,}?[ \\-]?)?(\\(?[\\w]{2,}?\\)?)?)?([ \\-]?([\\w]{2,}))*$");
-        if (!patternMin.matcher(phone).find()) {
+        if (phone.length() == 0 || !patternMin.matcher(phone).find()) {
             System.out.println("Wrong number format!");
             test = "[no number]";
         }

@@ -56,6 +56,7 @@ public class Person extends Contact implements Serializable {
     }
 
     public String getName() { return name; }
+    private String getSurname() { return surname; }
 
     public String getBirthDate() {
         return (birthDate != null) ? birthDate.toString() : "[no data]";
@@ -70,5 +71,10 @@ public class Person extends Contact implements Serializable {
                 "Number: " + phone + "\n" +
                 "Time created: " + timeCreated + "\n" +
                 "Time last edit: " + lastEdit + "\n";
+    }
+
+    @Override
+    public String getFullName() {
+        return String.format("%s %s", getName(), getSurname());
     }
 }
