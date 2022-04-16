@@ -1,15 +1,14 @@
 package contacts;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class Engine {
     final String SERIAL_FILE_NAME = "phonebook.db";
 
     final String menu = "[menu] Enter action (add, list, search, count, exit): ";
-    private PhoneBook phoneBook;
+    private final PhoneBook phoneBook;
+    PhoneBook searchBook;
     int cnt;
 
     public Engine() {
@@ -96,7 +95,7 @@ public class Engine {
         if (showList() > 0) {
             String strAction = getString("[list] Enter action ([number], back): ");
             int recordId = getInt(strAction);
-            if (recordId > 0) showRecord(recordId);
+            if (recordId > 0) showRecord(recordId, false);
         }
     }
 
@@ -129,14 +128,14 @@ public class Engine {
                 }
                 strAction = getString("[search] Enter action ([number], back, again): ");
             } else {
-                showRecord(recordId); // TODO: тут не правильно, поскольку нужно ID основного массива, а не поискового!
+                showRecord(recordId, true);
                 ret = false;
             }
         } while (ret);
     }
 
     private void searchContact(String searchStr) {
-        PhoneBook searchBook = new PhoneBook();
+        searchBook = new PhoneBook();
         if (phoneBook.countPeople() > 0) {
             List<Contact> people =  phoneBook.getPeople();
             cnt = 1;
@@ -154,10 +153,11 @@ public class Engine {
         System.out.println();
     }
 
-    private void showRecord(int recordId) {
+    private void showRecord(int recordId, boolean isSearch) {
         boolean ret = true;
+        PhoneBook contacts = isSearch ? searchBook : phoneBook;
         while (ret) {
-            System.out.println(phoneBook.getContactById(recordId));
+            System.out.println(contacts.getContactById(recordId));
             switch (getAction("[record] Enter action (edit, delete, menu): ")) {
                 case EDIT -> editContact(recordId);
                 case DELETE -> { deleteContact(recordId); ret = false; }
