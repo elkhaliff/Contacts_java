@@ -1,14 +1,21 @@
 package contacts;
 
-// add, remove, edit, count, info, exit
+// add, list, search, count, exit
+    // back, again
+        // edit, delete, menu
 // person, organization
-// name, surname, birth, gender, number
+    // name, surname, birth, gender, number
+    // name, address, number
 public enum Action {
     ADD,
-    REMOVE,
+    LIST,
+    SEARCH,
+    BACK,
+    AGAIN,
     EDIT,
+    DELETE,
+    MENU,
     COUNT,
-    INFO,
     EXIT,
     PERSON,
     ORGANIZATION,
@@ -16,5 +23,6 @@ public enum Action {
     SURNAME,
     BIRTH,
     GENDER,
-    NUMBER;
+    ADDRESS,
+    NUMBER
 }
