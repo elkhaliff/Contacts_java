@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Person extends Contact implements Serializable {
-    String name, surname, phone;
+    String name, surname;
     LocalDate birthDate;
     String gender;
 

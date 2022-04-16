@@ -129,7 +129,7 @@ public class Engine {
                 }
                 strAction = getString("[search] Enter action ([number], back, again): ");
             } else {
-                showRecord(recordId);
+                showRecord(recordId); // TODO: тут не правильно, поскольку нужно ID основного массива, а не поискового!
                 ret = false;
             }
         } while (ret);
